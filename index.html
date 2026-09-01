@@ -1087,30 +1087,26 @@
 </div>
 
 <script>
+  // ── COUNTDOWN (оставляем как есть) ─────────────
   const targetDate = new Date('2026-11-21T15:30:00').getTime();
   function updateCountdown() {
     const now = new Date().getTime();
     const diff = targetDate - now;
     if (diff <= 0) {
-      document.getElementById('cd-days').textContent = '0';
-      document.getElementById('cd-hours').textContent = '0';
-      document.getElementById('cd-minutes').textContent = '0';
-      document.getElementById('cd-seconds').textContent = '0';
+      ['cd-days','cd-hours','cd-minutes','cd-seconds'].forEach(id => document.getElementById(id).textContent = '0');
       return;
     }
-    const days = Math.floor(diff / (1000 * 60 * 60 * 24));
-    const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-    const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
-    const seconds = Math.floor((diff % (1000 * 60)) / 1000);
-    setNum('cd-days', days);
-    setNum('cd-hours', hours);
-    setNum('cd-minutes', minutes);
-    setNum('cd-seconds', seconds);
+    const d = Math.floor(diff / 86400000);
+    const h = Math.floor((diff % 86400000) / 3600000);
+    const m = Math.floor((diff % 3600000) / 60000);
+    const s = Math.floor((diff % 60000) / 1000);
+    setNum('cd-days', d); setNum('cd-hours', h);
+    setNum('cd-minutes', m); setNum('cd-seconds', s);
   }
-  function setNum(id, value) {
+  function setNum(id, val) {
     const el = document.getElementById(id);
-    if (el.textContent !== String(value)) {
-      el.textContent = value;
+    if (el.textContent !== String(val)) {
+      el.textContent = val;
       el.classList.remove('pulse');
       void el.offsetWidth;
       el.classList.add('pulse');
@@ -1119,47 +1115,53 @@
   updateCountdown();
   setInterval(updateCountdown, 1000);
 
-  // Scroll-reveal animations
+  // ── SCROLL REVEAL (оставляем как есть) ─────────
   document.addEventListener('DOMContentLoaded', function () {
     const revealEls = document.querySelectorAll('.reveal, .reveal-zoom');
     if ('IntersectionObserver' in window) {
-      const observer = new IntersectionObserver((entries) => {
+      const obs = new IntersectionObserver((entries) => {
         entries.forEach((entry) => {
           if (entry.isIntersecting) {
             entry.target.classList.add('is-visible');
-            observer.unobserve(entry.target);
+            obs.unobserve(entry.target);
           }
         });
       }, { threshold: 0.15, rootMargin: '0px 0px -40px 0px' });
-      revealEls.forEach((el) => observer.observe(el));
+      revealEls.forEach((el) => obs.observe(el));
     } else {
       revealEls.forEach((el) => el.classList.add('is-visible'));
     }
   });
 
-  // ── RSVP form ──────────────────────────────────
+  // ════════════════════════════════════════════════
+  //  RSVP FORM  —  ОБНОВЛЁННЫЙ КОД
+  // ════════════════════════════════════════════════
   document.addEventListener('DOMContentLoaded', function () {
-    const form = document.getElementById('rsvpForm');
-    const drinksWrap = document.getElementById('rsvpDrinksWrap');
-    const thanks = document.getElementById('rsvpThanks');
-
-    const extraWrap = document.getElementById('rsvpExtraWrap');
+    const form       = document.getElementById('rsvpForm');
+    const extraWrap  = document.getElementById('rsvpExtraWrap');
     const customCheck = document.getElementById('drink-custom-check');
-    const customText = document.getElementById('drink-custom-text');
+    const customText  = document.getElementById('drink-custom-text');
+    const thanks      = document.getElementById('rsvpThanks');
+    const submitBtn   = form.querySelector('.rsvp-submit');
 
+    // ⬇️ ВСТАВЬ СЮДА URL своего веб-приложения из Apps Script
+    const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbz4ZRtzJkqn5F4aLn15XoCyjPmfj2Bci5wVJKcrpJNGXRQPUtK5VFQMHQZQ8TgPUhzW_g/exec';
+
+    // Показ / скрытие доп. полей в зависимости от ответа
     document.querySelectorAll('input[name="attending"]').forEach(function (radio) {
       radio.addEventListener('change', function () {
         if (this.value === 'Да, с радостью') {
           extraWrap.classList.remove('hidden');
         } else {
           extraWrap.classList.add('hidden');
-          extraWrap.querySelectorAll('input[type="checkbox"]').forEach(function (cb) { cb.checked = false; });
-          extraWrap.querySelectorAll('input[type="text"]').forEach(function (txt) { txt.value = ''; });
+          extraWrap.querySelectorAll('input[type="checkbox"]').forEach(cb => cb.checked = false);
+          extraWrap.querySelectorAll('input[type="text"]').forEach(txt => txt.value = '');
           if (customText) customText.style.display = 'none';
         }
       });
     });
 
+    // Показ поля «Свой вариант»
     if (customCheck && customText) {
       customCheck.addEventListener('change', function () {
         customText.style.display = this.checked ? 'block' : 'none';
@@ -1167,26 +1169,62 @@
       });
     }
 
+    // Отправка формы
     if (form) {
-      form.addEventListener('submit', function (e) {
+      form.addEventListener('submit', async function (e) {
         e.preventDefault();
 
-        const data = new FormData(form);
-        let drinks = data.getAll('drinks');
-        const customVal = data.get('drink_custom');
-        if (customVal) drinks.push('Свой вариант: ' + customVal);
+        const formData = new FormData(form);
+        const attending = formData.get('attending') || '';
+        const drinks    = formData.getAll('drinks');
 
+        // Преобразуем чекбоксы напитков в булевы поля
         const payload = {
-          name: data.get('name') || '',
-          attending: data.get('attending') || '',
-          partner: data.get('partner') || '',
-          drinks: drinks.join(', ')
+          name:        (formData.get('name') || '').trim(),
+          attendance:  attending,
+          partner:     (formData.get('partner') || '').trim(),
+          noAlcohol:   drinks.includes('Не пью алкоголь'),
+          champagne:   drinks.includes('Шампанское'),
+          wine:        drinks.includes('Вино белое/красное'),
+          strong:      drinks.includes('Крепкие напитки'),
+          customDrink: drinks.includes('Свой вариант') ? (formData.get('drink_custom') || '').trim() : '',
+          notes:       ''   // можно добавить поле «Примечания» в HTML, если нужно
         };
 
-        console.log('RSVP:', payload);
+        // Валидация
+        if (!payload.name) {
+          alert('Пожалуйста, укажите ваше имя');
+          return;
+        }
+        if (!payload.attendance) {
+          alert('Пожалуйста, выберите, будете ли вы присутствовать');
+          return;
+        }
 
-        form.style.display = 'none';
-        thanks.classList.add('show');
+        // Блокируем кнопку на время отправки
+        const oldText = submitBtn.textContent;
+        submitBtn.textContent = 'Отправка...';
+        submitBtn.disabled = true;
+
+        try {
+          const response = await fetch(SCRIPT_URL, {
+            method: 'POST',
+            mode: 'no-cors',           // ← важно для Google Apps Script
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload)
+          });
+
+          // При mode: 'no-cors' ответа не будет, но запрос уйдёт
+          form.style.display = 'none';
+          thanks.classList.add('show');
+          thanks.textContent = 'Спасибо! Ваш ответ получен ❤️ ';
+
+        } catch (err) {
+          console.error('Ошибка отправки:', err);
+          alert('Что-то пошло не так. Попробуйте ещё раз или свяжитесь с нами напрямую.');
+          submitBtn.textContent = oldText;
+          submitBtn.disabled = false;
+        }
       });
     }
   });
