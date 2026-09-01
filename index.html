@@ -559,9 +559,10 @@
   /* Palette redesigned: elegant rounded bars with labels */
   .palette {
     display: flex;
-    gap: 14px;
+    gap: 18px;
     margin-top: 20px;
-    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
   }
   .palette-item {
     display: flex;
@@ -570,22 +571,17 @@
     gap: 8px;
   }
   .swatch {
-    width: 64px;
-    height: 32px;
-    border-radius: 16px;
-    border: 2px solid rgba(255,255,255,0.9);
-    box-shadow: 0 4px 12px rgba(0,0,0,0.12);
+    width: 52px;
+    height: 52px;
+    border-radius: 50%;
+    border: 3px solid rgba(255,255,255,0.9);
+    box-shadow: 0 4px 14px rgba(0,0,0,0.14);
     transition: transform 0.3s ease, box-shadow 0.3s ease;
+    cursor: default;
   }
   .swatch:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 8px 20px rgba(0,0,0,0.18);
-  }
-  .swatch-label {
-    font-size: 11px;
-    color: #888;
-    letter-spacing: 0.6px;
-    text-align: center;
+    transform: translateY(-4px) scale(1.08);
+    box-shadow: 0 10px 24px rgba(0,0,0,0.2);
   }
 
   .form-btn {
@@ -968,26 +964,11 @@
           Будем признательны, если вы поддержите нашу цветовую гамму — оттенки шоколадного, бежевого, мягкого золотистого, шалфейного и серебристого.
         </div>
         <div class="palette">
-          <div class="palette-item">
-            <span class="swatch" style="background:#4a3728" title="Шоколадный"></span>
-            <span class="swatch-label">Шоколадный</span>
-          </div>
-          <div class="palette-item">
-            <span class="swatch" style="background:#ddd0bd" title="Бежевый"></span>
-            <span class="swatch-label">Бежевый</span>
-          </div>
-          <div class="palette-item">
-            <span class="swatch" style="background:#f4eec4" title="Золотистый"></span>
-            <span class="swatch-label">Золотистый</span>
-          </div>
-          <div class="palette-item">
-            <span class="swatch" style="background:#8fa07f" title="Шалфейный"></span>
-            <span class="swatch-label">Шалфейный</span>
-          </div>
-          <div class="palette-item">
-            <span class="swatch" style="background:#c9c9c9" title="Серебристый"></span>
-            <span class="swatch-label">Серебристый</span>
-          </div>
+          <span class="swatch" style="background:#4a3728" title="Шоколадный"></span>
+          <span class="swatch" style="background:#ddd0bd" title="Бежевый"></span>
+          <span class="swatch" style="background:#f4eec4" title="Золотистый"></span>
+          <span class="swatch" style="background:#8fa07f" title="Шалфейный"></span>
+          <span class="swatch" style="background:#c9c9c9" title="Серебристый"></span>
         </div>
       </div>
     </div>
