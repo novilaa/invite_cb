@@ -185,7 +185,7 @@
   }
   .sep-icon { color: var(--sage-dark); font-size: 16px; }
 
-  /* ── Photo gallery (3 фото, вдохновлено референсом) ── */
+  /* ── Photo gallery (3 фото) ── */
   .gallery-section {
     padding: 8px 24px 56px;
     background: #fff;
@@ -227,7 +227,7 @@
   .gallery-item.reveal-zoom:nth-child(2) { transition-delay: 0.15s; }
   .gallery-item.reveal-zoom:nth-child(3) { transition-delay: 0.3s; }
 
-  /* ── Calendar / Save the date (redesigned) ─────── */
+  /* ── Calendar / Save the date ─────── */
   .calendar-section {
     padding: 64px 36px;
     text-align: center;
@@ -286,7 +286,7 @@
   }
   .date-sub .dot { color: #999; padding: 0 6px; }
 
-  /* ── Location ─────────────────────────────────── */
+  /* ── Location (ZAGS & Restaurant) ─────────────── */
   .location-section {
     display: grid;
     grid-template-columns: 1fr;
@@ -339,7 +339,7 @@
   .location-address {
     font-size: 17px;
     color: #555;
-    margin-bottom: 26px;
+    margin-bottom: 18px;
     line-height: 1.5;
   }
   .map-btn {
@@ -357,6 +357,22 @@
     align-self: flex-start;
   }
   .map-btn:hover { background: #333; color: #fff; }
+
+  .map-frame {
+    width: 100%;
+    height: 220px;
+    border: none;
+    border-radius: 14px;
+    margin-top: 18px;
+    filter: grayscale(100%);
+    transition: filter 0.5s ease;
+  }
+  .map-frame:hover {
+    filter: grayscale(0%);
+  }
+  @media (max-width: 480px) {
+    .map-frame { height: 180px; }
+  }
 
   /* ── Schedule ─────────────────────────────────── */
   .schedule-wrap {
@@ -423,7 +439,7 @@
   .schedule-item:nth-child(4) { transition-delay: 0.3s; }
   .schedule-item:nth-child(5) { transition-delay: 0.4s; }
 
-  /* ── Countdown (redesigned, warm palette) ──────── */
+  /* ── Countdown ──────── */
   .countdown-section {
     background: linear-gradient(180deg, #f5f5f5 0%, #e6e6e6 100%);
     padding: 56px 16px 60px;
@@ -540,16 +556,36 @@
     line-height: 1.65;
   }
 
+  /* Palette redesigned: elegant rounded bars with labels */
   .palette {
     display: flex;
-    gap: 12px;
-    margin-top: 18px;
+    gap: 14px;
+    margin-top: 20px;
+    flex-wrap: wrap;
+  }
+  .palette-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
   }
   .swatch {
-    width: 34px; height: 34px;
-    border-radius: 50%;
-    border: 2px solid rgba(255,255,255,0.8);
-    box-shadow: 0 3px 8px rgba(0,0,0,0.15);
+    width: 64px;
+    height: 32px;
+    border-radius: 16px;
+    border: 2px solid rgba(255,255,255,0.9);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.12);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  }
+  .swatch:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 20px rgba(0,0,0,0.18);
+  }
+  .swatch-label {
+    font-size: 11px;
+    color: #888;
+    letter-spacing: 0.6px;
+    text-align: center;
   }
 
   .form-btn {
@@ -759,6 +795,7 @@
   }
 </style>
 <base target="_blank">
+<base target="_blank">
 </head>
 <body>
 
@@ -793,7 +830,7 @@
 
   <div class="sep"><span class="sep-icon">✦</span></div>
 
-  <!-- CALENDAR / SAVE THE DATE (redesigned) -->
+  <!-- CALENDAR / SAVE THE DATE -->
   <div class="calendar-section">
     <span class="section-label">Сохраните дату</span>
     <div class="date-card reveal-zoom">
@@ -806,7 +843,23 @@
 
   <div class="sep"><span class="sep-icon">✦</span></div>
 
-  <!-- LOCATION -->
+  <!-- ZAGS LOCATION -->
+  <div class="location-section">
+    <div class="location-img-wrap">
+      <img src="zagz.jpg" alt="ЗАГС" loading="lazy" decoding="async">
+    </div>
+    <div class="location-body reveal">
+      <span class="section-label">Роспись</span>
+      <p class="location-name">Дворец бракосочетаний</p>
+      <p class="location-address">Московский просп., 38, корп. 5</p>
+      <a href="https://yandex.ru/maps/-/CDb4A4~o" class="map-btn" target="_blank" rel="noopener">Маршрут на карте</a>
+      <iframe class="map-frame" src="https://yandex.ru/map-widget/v1/?ll=47.216529%2C56.146673&z=16&pt=47.216529%2C56.146673%2Cpm2rdl" allowfullscreen></iframe>
+    </div>
+  </div>
+
+  <div class="sep" style="margin-top: 0;"><span class="sep-icon">✦</span></div>
+
+  <!-- RESTAURANT LOCATION -->
   <div class="location-section">
     <div class="location-img-wrap">
       <img src="location-photo.jpg" alt="Место проведения" loading="lazy" decoding="async">
@@ -815,7 +868,8 @@
       <span class="section-label">Место проведения</span>
       <p class="location-name">Verona Hall</p>
       <p class="location-address">Банкетный зал<br>г. Чебоксары, пр. Максима Горького, 2М</p>
-      <a href="https://yandex.ru/maps/?rtext=~56.149981,47.211060&rtt=auto" class="map-btn" target="_blank" rel="noopener">Маршрут на карте</a>
+      <a href="https://yandex.ru/maps/-/CDb4A8~4" class="map-btn" target="_blank" rel="noopener">Маршрут на карте</a>
+      <iframe class="map-frame" src="https://yandex.ru/map-widget/v1/?ll=47.209981%2C56.149506&z=16&pt=47.209981%2C56.149506%2Cpm2rdl" allowfullscreen></iframe>
     </div>
   </div>
 
@@ -875,7 +929,7 @@
     </div>
   </div>
 
-  <!-- COUNTDOWN (moved here, redesigned) -->
+  <!-- COUNTDOWN -->
   <div class="countdown-section">
     <span class="countdown-label">До торжества осталось</span>
     <div class="countdown" id="countdown">
@@ -914,11 +968,26 @@
           Будем признательны, если вы поддержите нашу цветовую гамму — оттенки шоколадного, бежевого, мягкого золотистого, шалфейного и серебристого.
         </div>
         <div class="palette">
-          <span class="swatch" style="background:#4a3728" title="Шоколадный"></span>
-          <span class="swatch" style="background:#ddd0bd" title="Бежевый"></span>
-          <span class="swatch" style="background:#f4eec4" title="Золотистый"></span>
-          <span class="swatch" style="background:#8fa07f" title="Шалфейный"></span>
-          <span class="swatch" style="background:#c9c9c9" title="Серебристый"></span>
+          <div class="palette-item">
+            <span class="swatch" style="background:#4a3728" title="Шоколадный"></span>
+            <span class="swatch-label">Шоколадный</span>
+          </div>
+          <div class="palette-item">
+            <span class="swatch" style="background:#ddd0bd" title="Бежевый"></span>
+            <span class="swatch-label">Бежевый</span>
+          </div>
+          <div class="palette-item">
+            <span class="swatch" style="background:#f4eec4" title="Золотистый"></span>
+            <span class="swatch-label">Золотистый</span>
+          </div>
+          <div class="palette-item">
+            <span class="swatch" style="background:#8fa07f" title="Шалфейный"></span>
+            <span class="swatch-label">Шалфейный</span>
+          </div>
+          <div class="palette-item">
+            <span class="swatch" style="background:#c9c9c9" title="Серебристый"></span>
+            <span class="swatch-label">Серебристый</span>
+          </div>
         </div>
       </div>
     </div>
@@ -990,7 +1059,7 @@
 
   <!-- ENDING -->
   <div class="ending-photo-wrap reveal-zoom">
-    <img src="ending-photo.jpg" alt="Ждём вас" loading="lazy" decoding="async">
+    <img src="photo-3.jpg" alt="Ждём вас" loading="lazy" decoding="async">
   </div>
   <div class="ending-text reveal">
     <h2 class="waiting">Ждём вас!</h2>
@@ -1078,21 +1147,6 @@
           attending: data.get('attending') || '',
           drinks: data.getAll('drinks').join(', ')
         };
-
-        // ─────────────────────────────────────────────────────
-        // ПОДКЛЮЧЕНИЕ К GOOGLE ТАБЛИЦАМ (добавить позже):
-        // 1. Создать Google Apps Script Web App, который принимает
-        //    POST-запрос и дописывает строку в таблицу.
-        // 2. Заменить строку ниже на реальный URL веб-приложения.
-        // 3. Раскомментировать fetch-запрос.
-        //
-        // fetch('https://script.google.com/macros/s/ВАШ_ID/exec', {
-        //   method: 'POST',
-        //   mode: 'no-cors',
-        //   headers: { 'Content-Type': 'application/json' },
-        //   body: JSON.stringify(payload)
-        // });
-        // ─────────────────────────────────────────────────────
 
         console.log('RSVP:', payload);
 
