@@ -533,6 +533,24 @@
     align-items: flex-start;
     box-shadow: 0 4px 20px rgba(0,0,0,0.06);
   }
+  .card.dresscode-card {
+    text-align: center;
+    flex-direction: column;
+    align-items: center;
+    gap: 14px;
+  }
+  .card.dresscode-card .card-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  .card.dresscode-card .card-title {
+    text-align: center;
+  }
+  .card.dresscode-card .card-body {
+    text-align: center;
+    max-width: 520px;
+  }
   @media (max-width: 480px) {
     .card { padding: 28px 22px; flex-direction: column; gap: 14px; }
   }
@@ -702,6 +720,16 @@
     border: solid #fff;
     border-width: 0 2px 2px 0;
     transform: rotate(45deg);
+  }
+  .rsvp-extra-wrap {
+    transition: opacity 0.3s ease, max-height 0.3s ease;
+    overflow: hidden;
+    max-height: 600px;
+  }
+  .rsvp-extra-wrap.hidden {
+    opacity: 0;
+    max-height: 0;
+    pointer-events: none;
   }
   .rsvp-drinks-wrap {
     transition: opacity 0.3s ease, max-height 0.3s ease;
@@ -956,7 +984,7 @@
   <!-- CARDS -->
   <div class="cards-stack">
 
-    <div class="card reveal">
+    <div class="card dresscode-card reveal">
       <div class="card-icon">◈</div>
       <div class="card-content">
         <div class="card-title">Дресс-код</div>
@@ -998,34 +1026,42 @@
           </div>
         </div>
 
-        <div class="rsvp-drinks-wrap hidden" id="rsvpDrinksWrap">
-          <label class="rsvp-label">Предпочтения по алкогольным напиткам</label>
-          <div class="rsvp-checkbox-group">
-            <label class="rsvp-checkbox">
-              <input type="checkbox" name="drinks" value="Красное вино">
-              <span class="rsvp-check-box"></span>
-              Красное вино
-            </label>
-            <label class="rsvp-checkbox">
-              <input type="checkbox" name="drinks" value="Белое вино">
-              <span class="rsvp-check-box"></span>
-              Белое вино
-            </label>
-            <label class="rsvp-checkbox">
-              <input type="checkbox" name="drinks" value="Шампанское">
-              <span class="rsvp-check-box"></span>
-              Шампанское
-            </label>
-            <label class="rsvp-checkbox">
-              <input type="checkbox" name="drinks" value="Водка">
-              <span class="rsvp-check-box"></span>
-              Водка
-            </label>
-            <label class="rsvp-checkbox">
-              <input type="checkbox" name="drinks" value="Не употребляю алкоголь">
-              <span class="rsvp-check-box"></span>
-              Не употребляю алкоголь
-            </label>
+        <div class="rsvp-extra-wrap hidden" id="rsvpExtraWrap">
+          <div style="margin-bottom: 22px;">
+            <label class="rsvp-label" for="rsvp-partner">Я буду с парой</label>
+            <input class="rsvp-input" type="text" id="rsvp-partner" name="partner" placeholder="Имя и фамилия">
+          </div>
+
+          <div class="rsvp-drinks-wrap" id="rsvpDrinksWrap">
+            <label class="rsvp-label">Ваши предпочтения по напиткам</label>
+            <div class="rsvp-checkbox-group">
+              <label class="rsvp-checkbox">
+                <input type="checkbox" name="drinks" value="Не пью алкоголь">
+                <span class="rsvp-check-box"></span>
+                Не пью алкоголь
+              </label>
+              <label class="rsvp-checkbox">
+                <input type="checkbox" name="drinks" value="Шампанское">
+                <span class="rsvp-check-box"></span>
+                Шампанское
+              </label>
+              <label class="rsvp-checkbox">
+                <input type="checkbox" name="drinks" value="Вино белое/красное">
+                <span class="rsvp-check-box"></span>
+                Вино белое/красное
+              </label>
+              <label class="rsvp-checkbox">
+                <input type="checkbox" name="drinks" value="Крепкие напитки">
+                <span class="rsvp-check-box"></span>
+                Крепкие напитки
+              </label>
+              <label class="rsvp-checkbox">
+                <input type="checkbox" name="drinks" value="Свой вариант" id="drink-custom-check">
+                <span class="rsvp-check-box"></span>
+                Свой вариант
+              </label>
+              <input class="rsvp-input" type="text" id="drink-custom-text" name="drink_custom" placeholder="Укажите ваш вариант" style="margin-top: 4px; margin-left: 32px; display: none;">
+            </div>
           </div>
         </div>
 
@@ -1107,26 +1143,44 @@
     const drinksWrap = document.getElementById('rsvpDrinksWrap');
     const thanks = document.getElementById('rsvpThanks');
 
+    const extraWrap = document.getElementById('rsvpExtraWrap');
+    const customCheck = document.getElementById('drink-custom-check');
+    const customText = document.getElementById('drink-custom-text');
+
     document.querySelectorAll('input[name="attending"]').forEach(function (radio) {
       radio.addEventListener('change', function () {
         if (this.value === 'Да, с радостью') {
-          drinksWrap.classList.remove('hidden');
+          extraWrap.classList.remove('hidden');
         } else {
-          drinksWrap.classList.add('hidden');
-          drinksWrap.querySelectorAll('input[type="checkbox"]').forEach(function (cb) { cb.checked = false; });
+          extraWrap.classList.add('hidden');
+          extraWrap.querySelectorAll('input[type="checkbox"]').forEach(function (cb) { cb.checked = false; });
+          extraWrap.querySelectorAll('input[type="text"]').forEach(function (txt) { txt.value = ''; });
+          if (customText) customText.style.display = 'none';
         }
       });
     });
+
+    if (customCheck && customText) {
+      customCheck.addEventListener('change', function () {
+        customText.style.display = this.checked ? 'block' : 'none';
+        if (!this.checked) customText.value = '';
+      });
+    }
 
     if (form) {
       form.addEventListener('submit', function (e) {
         e.preventDefault();
 
         const data = new FormData(form);
+        let drinks = data.getAll('drinks');
+        const customVal = data.get('drink_custom');
+        if (customVal) drinks.push('Свой вариант: ' + customVal);
+
         const payload = {
           name: data.get('name') || '',
           attending: data.get('attending') || '',
-          drinks: data.getAll('drinks').join(', ')
+          partner: data.get('partner') || '',
+          drinks: drinks.join(', ')
         };
 
         console.log('RSVP:', payload);
