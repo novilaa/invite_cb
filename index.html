@@ -81,19 +81,6 @@
     display: block;
     filter: grayscale(100%);
   }
-  .hero-text .eyebrow,
-  .hero-text .names,
-  .hero-text .date-line {
-    opacity: 0;
-    animation: heroTextIn 1s ease forwards;
-  }
-  .hero-text .eyebrow { animation-delay: 0.5s; }
-  .hero-text .names { animation-delay: 0.75s; }
-  .hero-text .date-line { animation-delay: 1.05s; }
-  @keyframes heroTextIn {
-    from { opacity: 0; transform: translateY(16px); }
-    to { opacity: 1; transform: translateY(0); }
-  }
   .hero-overlay {
     position: absolute; inset: 0;
     background: linear-gradient(to bottom, rgba(0,0,0,0.02) 0%, rgba(0,0,0,0.55) 100%);
@@ -1003,7 +990,7 @@
 
   <!-- ENDING -->
   <div class="ending-photo-wrap reveal-zoom">
-    <img src="photo-3.jpg" alt="Ждём вас" loading="lazy" decoding="async">
+    <img src="ending-photo.jpg" alt="Ждём вас" loading="lazy" decoding="async">
   </div>
   <div class="ending-text reveal">
     <h2 class="waiting">Ждём вас!</h2>
