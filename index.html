@@ -30,6 +30,40 @@
     }
   }
 
+  /* ── Palette (по фото дресс-кода) ─────────────── */
+  :root {
+    --brown: #4a3728;
+    --beige: #ddd0bd;
+    --cream: #f7f1e6;
+    --gold: #a98c5f;
+    --sage: #8fa07f;
+    --sage-dark: #6d7d61;
+    --silver: #c9c9c9;
+  }
+
+  /* ── Scroll reveal animations ─────────────────── */
+  .reveal {
+    opacity: 0;
+    transform: translateY(28px);
+    transition: opacity 0.9s cubic-bezier(.22,.61,.36,1), transform 0.9s cubic-bezier(.22,.61,.36,1);
+  }
+  .reveal.is-visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  .reveal-zoom {
+    opacity: 0;
+    transform: scale(0.92);
+    transition: opacity 0.9s ease, transform 0.9s cubic-bezier(.22,.61,.36,1);
+  }
+  .reveal-zoom.is-visible {
+    opacity: 1;
+    transform: scale(1);
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .reveal, .reveal-zoom { opacity: 1; transform: none; transition: none; }
+  }
+
   /* ── Hero ────────────────────────────────────── */
   .hero {
     position: relative;
@@ -46,6 +80,24 @@
     object-fit: cover;
     display: block;
     filter: grayscale(100%);
+    transform: scale(1.12);
+    animation: heroZoomOut 2.4s cubic-bezier(.22,.61,.36,1) forwards;
+  }
+  @keyframes heroZoomOut {
+    to { transform: scale(1); }
+  }
+  .hero-text .eyebrow,
+  .hero-text .names,
+  .hero-text .date-line {
+    opacity: 0;
+    animation: heroTextIn 1s ease forwards;
+  }
+  .hero-text .eyebrow { animation-delay: 0.5s; }
+  .hero-text .names { animation-delay: 0.75s; }
+  .hero-text .date-line { animation-delay: 1.05s; }
+  @keyframes heroTextIn {
+    from { opacity: 0; transform: translateY(16px); }
+    to { opacity: 1; transform: translateY(0); }
   }
   .hero-overlay {
     position: absolute; inset: 0;
@@ -84,46 +136,6 @@
     font-size: clamp(14px, 3vw, 17px);
     letter-spacing: 3px;
     opacity: 0.8;
-  }
-
-  /* ── Countdown ───────────────────────────────── */
-  .countdown-section {
-    background: #111;
-    color: #fff;
-    padding: 48px 36px;
-    text-align: center;
-  }
-  .countdown-label {
-    font-size: 12px;
-    letter-spacing: 4px;
-    text-transform: uppercase;
-    color: #888;
-    margin-bottom: 24px;
-    display: block;
-  }
-  .countdown {
-    display: flex;
-    justify-content: center;
-    gap: 32px;
-    flex-wrap: wrap;
-  }
-  .countdown-item {
-    text-align: center;
-    min-width: 70px;
-  }
-  .countdown-item .num {
-    font-family: 'Playfair Display', serif;
-    font-size: clamp(36px, 6vw, 56px);
-    font-weight: 400;
-    line-height: 1;
-    color: #fff;
-  }
-  .countdown-item .label {
-    font-size: 13px;
-    letter-spacing: 2px;
-    text-transform: uppercase;
-    color: #888;
-    margin-top: 6px;
   }
 
   /* ── Ornament ─────────────────────────────────── */
@@ -189,54 +201,108 @@
     height: 1px;
     background: #d0d0d0;
   }
-  .sep-icon { color: #666; font-size: 18px; }
+  .sep-icon { color: var(--sage-dark); font-size: 16px; }
 
-  /* ── Calendar ─────────────────────────────────── */
-  .calendar-section {
-    padding: 60px 36px;
-    text-align: center;
-    background: #fafafa;
-  }
-  .calendar-box {
-    display: inline-block;
-    border: 1px solid #333;
-    border-radius: 16px;
-    overflow: hidden;
+  /* ── Photo gallery (3 фото, вдохновлено референсом) ── */
+  .gallery-section {
+    padding: 8px 24px 56px;
     background: #fff;
-    box-shadow: 0 8px 30px rgba(0,0,0,0.08);
   }
-  .calendar-header {
-    background: #111;
-    color: #fff;
-    padding: 14px 48px;
-    font-family: 'Playfair Display', serif;
-    font-size: 18px;
-    letter-spacing: 3px;
-    text-transform: uppercase;
+  .gallery-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 14px;
+    max-width: 760px;
+    margin: 0 auto;
   }
-  .calendar-body {
-    padding: 28px 36px 32px;
+  @media (max-width: 560px) {
+    .gallery-grid { gap: 8px; }
   }
-  .calendar-day {
-    font-family: 'Playfair Display', serif;
-    font-size: clamp(48px, 10vw, 80px);
-    font-weight: 400;
-    color: #1a1a1a;
-    line-height: 1;
+  .gallery-item {
+    position: relative;
+    overflow: hidden;
+    border-radius: 10px;
+    aspect-ratio: 3 / 4;
+    background: #eee;
   }
-  .calendar-weekday {
-    font-size: 16px;
-    color: #666;
-    margin-top: 8px;
-    letter-spacing: 2px;
-    text-transform: uppercase;
+  .gallery-item:nth-child(2) { margin-top: 26px; }
+  @media (max-width: 560px) {
+    .gallery-item:nth-child(2) { margin-top: 14px; }
   }
-  .calendar-year {
+  .gallery-item img {
+    width: 100%; height: 100%;
+    object-fit: cover;
+    display: block;
+    filter: grayscale(100%);
+    transform: scale(1.06);
+    transition: transform 0.8s cubic-bezier(.22,.61,.36,1), filter 0.6s ease;
+  }
+  .gallery-item:hover img {
+    transform: scale(1);
+    filter: grayscale(15%);
+  }
+  .gallery-item.reveal-zoom:nth-child(1) { transition-delay: 0s; }
+  .gallery-item.reveal-zoom:nth-child(2) { transition-delay: 0.15s; }
+  .gallery-item.reveal-zoom:nth-child(3) { transition-delay: 0.3s; }
+
+  /* ── Calendar / Save the date (redesigned) ─────── */
+  .calendar-section {
+    padding: 64px 36px;
+    text-align: center;
+    background: linear-gradient(180deg, #faf7f2 0%, #f2ece2 100%);
+  }
+  .date-card {
+    display: inline-flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    padding: 40px 56px;
+    background: #fff;
+    border: 1px solid var(--beige);
+    box-shadow: 0 12px 36px rgba(74,55,40,0.10);
+    position: relative;
+  }
+  @media (max-width: 480px) {
+    .date-card { padding: 32px 30px; }
+  }
+  .date-card::before {
+    content: '';
+    position: absolute;
+    inset: 8px;
+    border: 1px solid var(--gold);
+    opacity: 0.45;
+    pointer-events: none;
+  }
+  .date-flourish {
     font-size: 14px;
-    color: #999;
-    margin-top: 4px;
-    letter-spacing: 3px;
+    color: var(--sage-dark);
+    letter-spacing: 6px;
+    margin-bottom: 4px;
   }
+  .date-month {
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    font-size: 22px;
+    letter-spacing: 5px;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 2px;
+  }
+  .date-day {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(64px, 12vw, 96px);
+    font-weight: 500;
+    line-height: 1;
+    color: var(--brown);
+  }
+  .date-sub {
+    font-size: 16px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: #8a7e6f;
+    margin-top: 6px;
+  }
+  .date-sub .dot { color: var(--sage-dark); padding: 0 6px; }
 
   /* ── Location ─────────────────────────────────── */
   .location-section {
@@ -334,7 +400,7 @@
   }
   .schedule-item:last-child { padding-bottom: 0; }
   .s-time {
-    flex: 0 0 56px;
+    flex: 0 0 57px;
     font-family: 'Playfair Display', serif;
     font-size: 16px;
     color: #888;
@@ -346,14 +412,14 @@
     display: flex;
     align-items: flex-start;
     justify-content: center;
-    padding-top: 8px;
+    padding-top: 15px;
     position: relative;
     z-index: 1;
   }
   .s-dot {
     width: 9px; height: 9px;
     border-radius: 50%;
-    background: #333;
+    background: var(--sage-dark);
     box-shadow: 0 0 0 3px #fff, 0 0 0 5px #d0d0d0;
   }
   .s-desc { flex: 1; }
@@ -368,6 +434,81 @@
   .s-desc span {
     font-size: 15px;
     color: #666;
+  }
+  .schedule-item:nth-child(1) { transition-delay: 0s; }
+  .schedule-item:nth-child(2) { transition-delay: 0.1s; }
+  .schedule-item:nth-child(3) { transition-delay: 0.2s; }
+  .schedule-item:nth-child(4) { transition-delay: 0.3s; }
+  .schedule-item:nth-child(5) { transition-delay: 0.4s; }
+
+  /* ── Countdown (redesigned, warm palette) ──────── */
+  .countdown-section {
+    background: linear-gradient(180deg, #f2ece2 0%, #eadfcd 100%);
+    padding: 56px 24px 60px;
+    text-align: center;
+  }
+  .countdown-label {
+    font-size: 12px;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    color: var(--sage-dark);
+    margin-bottom: 30px;
+    display: block;
+  }
+  .countdown {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 14px;
+    flex-wrap: wrap;
+  }
+  .countdown-item {
+    text-align: center;
+  }
+  .c-ring {
+    width: 84px;
+    height: 84px;
+    border-radius: 50%;
+    background: #fff;
+    border: 1px solid var(--gold);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 6px 18px rgba(74,55,40,0.10);
+  }
+  @media (max-width: 480px) {
+    .c-ring { width: 66px; height: 66px; }
+  }
+  .c-ring .num {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(24px, 5vw, 32px);
+    font-weight: 500;
+    color: var(--brown);
+    line-height: 1;
+  }
+  .countdown-item .c-label {
+    font-size: 12px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: #8a7e6f;
+    margin-top: 10px;
+  }
+  .c-divider {
+    color: var(--sage);
+    font-size: 18px;
+    padding-bottom: 24px;
+  }
+  .countdown-item.reveal-zoom:nth-child(1) { transition-delay: 0s; }
+  .countdown-item.reveal-zoom:nth-child(3) { transition-delay: 0.12s; }
+  .countdown-item.reveal-zoom:nth-child(5) { transition-delay: 0.24s; }
+  .countdown-item.reveal-zoom:nth-child(7) { transition-delay: 0.36s; }
+  .c-ring .num.pulse {
+    animation: numPulse 0.4s ease;
+  }
+  @keyframes numPulse {
+    0% { transform: scale(1); }
+    40% { transform: scale(1.18); color: var(--gold); }
+    100% { transform: scale(1); }
   }
 
   /* ── Dress-code & Cards ───────────────────────── */
@@ -398,7 +539,7 @@
   }
   .card-icon {
     font-size: 28px;
-    color: #333;
+    color: var(--sage-dark);
     flex-shrink: 0;
     margin-top: 4px;
   }
@@ -418,14 +559,14 @@
 
   .palette {
     display: flex;
-    gap: 10px;
-    margin-top: 16px;
+    gap: 12px;
+    margin-top: 18px;
   }
   .swatch {
-    width: 32px; height: 32px;
+    width: 34px; height: 34px;
     border-radius: 50%;
-    border: 2px solid rgba(255,255,255,0.7);
-    box-shadow: 0 3px 8px rgba(0,0,0,0.12);
+    border: 2px solid rgba(255,255,255,0.8);
+    box-shadow: 0 3px 8px rgba(0,0,0,0.15);
   }
 
   .form-btn {
@@ -485,17 +626,6 @@
     background: #333;
     margin: 22px auto 0;
   }
-
-  /* Placeholder style */
-  .placeholder {
-    background: #e0e0e0;
-    color: #666;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 14px;
-    letter-spacing: 1px;
-  }
 </style>
 <base target="_blank">
 </head>
@@ -514,36 +644,32 @@
     </div>
   </div>
 
-  <!-- COUNTDOWN -->
-  <div class="countdown-section">
-    <span class="countdown-label">До торжества осталось</span>
-    <div class="countdown" id="countdown">
-      <div class="countdown-item"><div class="num" id="cd-days">0</div><div class="label">дней</div></div>
-      <div class="countdown-item"><div class="num" id="cd-hours">0</div><div class="label">часов</div></div>
-      <div class="countdown-item"><div class="num" id="cd-minutes">0</div><div class="label">минут</div></div>
-      <div class="countdown-item"><div class="num" id="cd-seconds">0</div><div class="label">секунд</div></div>
-    </div>
-  </div>
-
   <!-- GREETING -->
-  <div class="section greeting">
+  <div class="section greeting reveal">
     <span class="section-label">Дорогие гости</span>
     <p>Совсем скоро состоится самое главное торжество в нашей жизни — наша свадьба. Приглашаем вас разделить радость этого прекрасного дня вместе с нами.</p>
     <div class="greeting-rule"></div>
   </div>
 
+  <!-- PHOTO GALLERY (3 фото) -->
+  <div class="gallery-section">
+    <div class="gallery-grid">
+      <div class="gallery-item reveal-zoom"><img src="photo-1.jpg" alt="Сергей и Ольга"></div>
+      <div class="gallery-item reveal-zoom"><img src="photo-2.jpg" alt="Сергей и Ольга"></div>
+      <div class="gallery-item reveal-zoom"><img src="photo-3.jpg" alt="Сергей и Ольга"></div>
+    </div>
+  </div>
+
   <div class="sep"><span class="sep-icon">✦</span></div>
 
-  <!-- CALENDAR -->
+  <!-- CALENDAR / SAVE THE DATE (redesigned) -->
   <div class="calendar-section">
     <span class="section-label">Сохраните дату</span>
-    <div class="calendar-box">
-      <div class="calendar-header">Ноябрь</div>
-      <div class="calendar-body">
-        <div class="calendar-day">21</div>
-        <div class="calendar-weekday">Суббота</div>
-        <div class="calendar-year">2026</div>
-      </div>
+    <div class="date-card reveal-zoom">
+      <div class="date-flourish">✦</div>
+      <div class="date-month">Ноябрь</div>
+      <div class="date-day">21</div>
+      <div class="date-sub">Суббота<span class="dot">·</span>2026</div>
     </div>
   </div>
 
@@ -554,10 +680,10 @@
     <div class="location-img-wrap">
       <img src="location-photo.jpg" alt="Место проведения">
     </div>
-    <div class="location-body">
+    <div class="location-body reveal">
       <span class="section-label">Место проведения</span>
-      <p class="location-name">[Название ресторана]</p>
-      <p class="location-address">[Адрес ресторана — уточняется]</p>
+      <p class="location-name">Verona Hall</p>
+      <p class="location-address">Банкетный зал<br>[Адрес Verona Hall — уточняется]</p>
       <a href="#" class="map-btn">На карте</a>
     </div>
   </div>
@@ -570,16 +696,16 @@
     <h2 class="section-title">Программа дня</h2>
     <div class="schedule-wrap">
 
-      <div class="schedule-item">
+      <div class="schedule-item reveal">
         <div class="s-time">13:20</div>
         <div class="s-dot-wrap"><div class="s-dot"></div></div>
         <div class="s-desc">
           <strong>Роспись в ЗАГСе</strong>
-          <span>[Адрес ЗАГСа — уточняется]</span>
+          <span>Московский просп., 38, корп. 5</span>
         </div>
       </div>
 
-      <div class="schedule-item">
+      <div class="schedule-item reveal">
         <div class="s-time">15:30</div>
         <div class="s-dot-wrap"><div class="s-dot"></div></div>
         <div class="s-desc">
@@ -588,7 +714,7 @@
         </div>
       </div>
 
-      <div class="schedule-item">
+      <div class="schedule-item reveal">
         <div class="s-time">16:00</div>
         <div class="s-dot-wrap"><div class="s-dot"></div></div>
         <div class="s-desc">
@@ -597,16 +723,16 @@
         </div>
       </div>
 
-      <div class="schedule-item">
+      <div class="schedule-item reveal">
         <div class="s-time">17:00</div>
         <div class="s-dot-wrap"><div class="s-dot"></div></div>
         <div class="s-desc">
           <strong>Свадебный банкет</strong>
-          <span>Начало праздничного вечера</span>
+          <span>Verona Hall — начало праздничного вечера</span>
         </div>
       </div>
 
-      <div class="schedule-item">
+      <div class="schedule-item reveal">
         <div class="s-time">22:00</div>
         <div class="s-dot-wrap"><div class="s-dot"></div></div>
         <div class="s-desc">
@@ -618,28 +744,55 @@
     </div>
   </div>
 
+  <!-- COUNTDOWN (moved here, redesigned) -->
+  <div class="countdown-section">
+    <span class="countdown-label">До торжества осталось</span>
+    <div class="countdown" id="countdown">
+      <div class="countdown-item reveal-zoom">
+        <div class="c-ring"><span class="num" id="cd-days">0</span></div>
+        <div class="c-label">дней</div>
+      </div>
+      <div class="c-divider">✦</div>
+      <div class="countdown-item reveal-zoom">
+        <div class="c-ring"><span class="num" id="cd-hours">0</span></div>
+        <div class="c-label">часов</div>
+      </div>
+      <div class="c-divider">✦</div>
+      <div class="countdown-item reveal-zoom">
+        <div class="c-ring"><span class="num" id="cd-minutes">0</span></div>
+        <div class="c-label">минут</div>
+      </div>
+      <div class="c-divider">✦</div>
+      <div class="countdown-item reveal-zoom">
+        <div class="c-ring"><span class="num" id="cd-seconds">0</span></div>
+        <div class="c-label">секунд</div>
+      </div>
+    </div>
+  </div>
+
   <div class="sep"><span class="sep-icon">✦</span></div>
 
   <!-- CARDS -->
   <div class="cards-stack">
 
-    <div class="card">
+    <div class="card reveal">
       <div class="card-icon">◈</div>
       <div class="card-content">
         <div class="card-title">Дресс-код</div>
         <div class="card-body">
-          Будем признательны, если вы поддержите нашу цветовую гамму.
+          Будем признательны, если вы поддержите нашу цветовую гамму — оттенки шоколадного, бежевого, мягкого золотистого, шалфейного и серебристого.
         </div>
         <div class="palette">
-          <span class="swatch" style="background:#000000"></span>
-          <span class="swatch" style="background:#333333"></span>
-          <span class="swatch" style="background:#888888"></span>
-          <span class="swatch" style="background:#ffffff; border-color:#ccc;"></span>
+          <span class="swatch" style="background:#4a3728" title="Шоколадный"></span>
+          <span class="swatch" style="background:#ddd0bd" title="Бежевый"></span>
+          <span class="swatch" style="background:#f4eec4" title="Золотистый"></span>
+          <span class="swatch" style="background:#8fa07f" title="Шалфейный"></span>
+          <span class="swatch" style="background:#c9c9c9" title="Серебристый"></span>
         </div>
       </div>
     </div>
 
-    <div class="card">
+    <div class="card reveal" style="transition-delay:0.12s">
       <div class="card-icon">✉</div>
       <div class="card-content">
         <div class="card-title">Анкета гостя</div>
@@ -653,10 +806,10 @@
   </div>
 
   <!-- ENDING -->
-  <div class="ending-photo-wrap">
+  <div class="ending-photo-wrap reveal-zoom">
     <img src="ending-photo.jpg" alt="Ждём вас">
   </div>
-  <div class="ending-text">
+  <div class="ending-text reveal">
     <h2 class="waiting">Ждём вас!</h2>
     <p class="couple-sig">Сергей и Ольга</p>
     <div class="ending-rule"></div>
@@ -680,13 +833,40 @@
     const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
     const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
     const seconds = Math.floor((diff % (1000 * 60)) / 1000);
-    document.getElementById('cd-days').textContent = days;
-    document.getElementById('cd-hours').textContent = hours;
-    document.getElementById('cd-minutes').textContent = minutes;
-    document.getElementById('cd-seconds').textContent = seconds;
+    setNum('cd-days', days);
+    setNum('cd-hours', hours);
+    setNum('cd-minutes', minutes);
+    setNum('cd-seconds', seconds);
+  }
+  function setNum(id, value) {
+    const el = document.getElementById(id);
+    if (el.textContent !== String(value)) {
+      el.textContent = value;
+      el.classList.remove('pulse');
+      void el.offsetWidth;
+      el.classList.add('pulse');
+    }
   }
   updateCountdown();
   setInterval(updateCountdown, 1000);
+
+  // Scroll-reveal animations
+  document.addEventListener('DOMContentLoaded', function () {
+    const revealEls = document.querySelectorAll('.reveal, .reveal-zoom');
+    if ('IntersectionObserver' in window) {
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('is-visible');
+            observer.unobserve(entry.target);
+          }
+        });
+      }, { threshold: 0.15, rootMargin: '0px 0px -40px 0px' });
+      revealEls.forEach((el) => observer.observe(el));
+    } else {
+      revealEls.forEach((el) => el.classList.add('is-visible'));
+    }
+  });
 </script>
 
 </body>
